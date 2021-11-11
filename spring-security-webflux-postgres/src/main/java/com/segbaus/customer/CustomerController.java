@@ -19,7 +19,7 @@ public class CustomerController {
   }
 
   @GetMapping(value = "/customers", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
-  public Flux<UUID> save() {
+  public Flux<UUID> getCustomers() {
     return client.sql("select * from customer;").map(row -> (UUID) row.get("id")).all();
   }
 }
