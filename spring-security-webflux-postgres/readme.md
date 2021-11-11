@@ -1,30 +1,37 @@
 # Sample App with Http Basic AuthN, WebFlux, and Reactive Database Interaction
 
-To setup this app, you will need a couple of dependencies.
+## Install a Postgres Database 
 
-Firstly, you will need to run a postgres database in an environment
-that you have access to (such as your local machine). I think it should work
-with any reasonably recent version of postgres (9,10,11,12,13). Create a
-database named `segbaus`, and create a relation called `customer`
+Create a database named `segbaus`, and create a relation called `customer`
 with an `id` column as a UUID type. Insert a couple uuids in there to
 test it out.
 
-Secondly, you will need to have Java installed (should work with 8+, but
-tested in java 17 environment).
+On mac, I recommend homebrew services.
 
-Once the db is up and running, put the following variables into the 
-environment of the java process that executes the app:
+On windows, I recommend ![Postgres Downloads](https://www.postgresql.org/download), or 
+you can try out chocolatey or something (no endorsement).
 
-1. PG_PASSWORD, the password of the postgres user in the database
-
-You can modify the other database configurations (such as database name)
+You can modify database configurations (such as database name or user)
 by editing `R2dbcConfiguration.java`.
 
-Build the app by running `./mvnw package`. This should work on most common
-operating systems.
+## Install Java
 
-Then, in this directory, run `java -jar ./target/segbaus-0.0.1-SNAPSHOT.jar`.
+Tested with Java 17.
 
+## Set up your environment
+On mac: `export PG_PASSWORD=<postgres user's password>`
+On windows powershell: `[System.Environment]::SetEnvironmentVariable("PG_PASSWORD", "<postgres user's password>")`
+
+## Build and run the package
+Build:
+`./mvnw package`
+
+Run:
+`java -jar ./target/segbaus-0.0.1-SNAPSHOT.jar`
+
+Or use your favorite IDE integration
+
+Test out the service:
 ```
     # Get user ids you put in the database.
     curl --user seg:baus http://localhost:8080/customer
