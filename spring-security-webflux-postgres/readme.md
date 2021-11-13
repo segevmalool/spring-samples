@@ -36,13 +36,10 @@ Run:
 
 Or use your favorite IDE integration
 
-Test out the service:
-```
-    # Get user ids you put in the database.
-    curl --user seg:baus http://localhost:8080/customer
+Test out the service using your browser for idp login:
+
+- Get user ids you put in the database. `https://localhost:8443/customer`
     
-    # Get a count as a stream.
-    curl --user seg:baus http://localhost:8080/count
-```
+- Get a count as a stream. `https://localhost:8443/count`
 
 Hope it works!

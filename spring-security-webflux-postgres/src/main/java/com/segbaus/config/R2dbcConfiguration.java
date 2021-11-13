@@ -1,4 +1,4 @@
-package com.segbaus;
+package com.segbaus.config;
 
 import io.r2dbc.spi.ConnectionFactories;
 import io.r2dbc.spi.ConnectionFactory;
