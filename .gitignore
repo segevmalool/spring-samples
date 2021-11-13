@@ -31,3 +31,5 @@ build/
 
 ### VS Code ###
 .vscode/
+
+spring-security-webflux-postgres/src/main/resources/tls.jks
