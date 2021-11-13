@@ -19,12 +19,17 @@ by editing `R2dbcConfiguration.java`.
 Tested with Java 17.
 
 ## Set up your environment
-On mac: `export PG_PASSWORD=<postgres user's password>`
-On windows powershell: `[System.Environment]::SetEnvironmentVariable("PG_PASSWORD", "<postgres user's password>")`
+The required environment variables are listed in `env.sample`.
+
+On mac: `export a=b`
+On windows powershell: `[System.Environment]::SetEnvironmentVariable("a", "b")`
 
 ## Build and run the package
 Build:
 `./mvnw package`
+
+Note that the environment must be properly configured to
+load the application context (and to run the tests).
 
 Run:
 `java -jar ./target/segbaus-0.0.1-SNAPSHOT.jar`
