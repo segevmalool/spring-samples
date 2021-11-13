@@ -54,6 +54,10 @@ public class SecurityConfiguration {
         .and()
         .authorizeExchange()
         .pathMatchers("/actuator/*")
+        .authenticated()
+        .and()
+        .authorizeExchange()
+        .pathMatchers("/customers")
         .authenticated();
     return http.build();
   }
