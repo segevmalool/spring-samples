@@ -1,4 +1,4 @@
-# Sample App with Http Basic AuthN, WebFlux, and Reactive Database Interaction
+# Sample App with Oauth2 AuthN/Z, WebFlux, and Reactive Database Interaction
 
 ## Install a Postgres Database 
 

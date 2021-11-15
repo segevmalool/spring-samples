@@ -45,17 +45,10 @@ public class SecurityConfiguration {
             })
         .httpBasic()
         .disable()
-        .authorizeExchange()
-        .pathMatchers("/count")
-        .authenticated()
-        .and()
-        .authorizeExchange()
-        .pathMatchers("/actuator/*")
-        .authenticated()
-        .and()
-        .authorizeExchange()
-        .pathMatchers("/customers")
-        .authenticated();
+        .authorizeExchange(
+            authorizeExchangeSpec -> {
+              authorizeExchangeSpec.anyExchange().hasAuthority("SCOPE_openid");
+            });
     return http.build();
   }
 
@@ -63,7 +56,7 @@ public class SecurityConfiguration {
   ReactiveClientRegistrationRepository getClientRegistrationRepository() {
     ClientRegistration google =
         ClientRegistration.withRegistrationId("google")
-            .scope("openid", "profile", "email")
+            .scope("openid", "profile", "email", "cloud-platform.read-only")
             .clientId(clientId)
             .clientSecret(clientSecret)
             .authorizationUri(authUri)
