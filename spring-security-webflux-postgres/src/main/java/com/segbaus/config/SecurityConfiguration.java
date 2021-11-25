@@ -1,6 +1,7 @@
 package com.segbaus.config;
 
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.autoconfigure.security.reactive.ReactiveSecurityAutoConfiguration;
 import org.springframework.context.annotation.Bean;
 import org.springframework.security.config.annotation.web.reactive.EnableWebFluxSecurity;
 import org.springframework.security.config.web.server.ServerHttpSecurity;
@@ -9,7 +10,6 @@ import org.springframework.security.oauth2.client.registration.InMemoryReactiveC
 import org.springframework.security.oauth2.client.registration.ReactiveClientRegistrationRepository;
 import org.springframework.security.oauth2.core.AuthorizationGrantType;
 import org.springframework.security.web.server.SecurityWebFilterChain;
-import org.springframework.security.web.server.authentication.RedirectServerAuthenticationSuccessHandler;
 
 @EnableWebFluxSecurity
 public class SecurityConfiguration {
@@ -36,19 +36,20 @@ public class SecurityConfiguration {
 
   @Bean
   public SecurityWebFilterChain webFilterChain(ServerHttpSecurity http) {
-    http.oauth2Client()
-        .and()
-        .oauth2Login(
-            loginSpec -> {
-              loginSpec.authenticationSuccessHandler(
-                  new RedirectServerAuthenticationSuccessHandler("/count"));
-            })
-        .httpBasic()
-        .disable()
-        .authorizeExchange(
-            authorizeExchangeSpec -> {
-              authorizeExchangeSpec.anyExchange().hasAuthority("SCOPE_openid");
-            });
+    http
+      .authorizeExchange()
+      .pathMatchers("/actuator/health").permitAll()
+      .anyExchange().authenticated().and()
+      .oauth2Client()
+      .and()
+      .oauth2Login()
+      .and()
+      .httpBasic()
+      .disable()
+      .formLogin()
+      .disable()
+      .csrf()
+      .disable();
     return http.build();
   }
 
@@ -56,7 +57,7 @@ public class SecurityConfiguration {
   ReactiveClientRegistrationRepository getClientRegistrationRepository() {
     ClientRegistration google =
         ClientRegistration.withRegistrationId("google")
-            .scope("openid", "profile", "email", "cloud-platform.read-only")
+            .scope("openid", "profile", "email")
             .clientId(clientId)
             .clientSecret(clientSecret)
             .authorizationUri(authUri)
