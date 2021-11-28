@@ -6,7 +6,6 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.reactive.WebFluxTest;
 import org.springframework.context.ApplicationContext;
-import org.springframework.security.access.SecurityConfig;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.web.reactive.server.WebTestClient;
@@ -27,9 +26,17 @@ public class userTest {
   }
 
   @Test
-  public void getUserTest() {
+  public void getUserTestUnAuthN() {
     client.get().uri("/user").exchange()
       .expectStatus().is3xxRedirection()
       .expectHeader().location("/oauth2/authorization/google");
+  }
+
+  @Test
+  @WithMockUser
+  public void getUserTestAuthN() {
+    client.get().uri("/user").exchange()
+      .expectStatus().is2xxSuccessful()
+      .expectBody().jsonPath("$.authentication");
   }
 }
