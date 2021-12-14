@@ -6,8 +6,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.ReactiveSecurityContextHolder;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import reactor.core.publisher.Mono;
+
+import java.util.UUID;
 
 @RestController
 public class BankController {
@@ -21,16 +24,12 @@ public class BankController {
     this.bankService = bankService;
   }
 
-  //  @PostMapping(value = "/transaction/{amount}")
-  //  public Flux<Row> addTransaction(@PathVariable Double amount) {
-  //    return ReactiveSecurityContextHolder.getContext().then(securityContextSignal ->
-  //    UUID source = bankService.getSourceAccount(securityContext);
-  //    UUID target = bankService.getTargetAccount(securityContext);
-  //
-  //    return this.bankRepo.addTransaction(source, target, amount);
-  //  }
+  public record TransactionRequest(UUID targetAccount, Double amount) {}
 
-  private class Account {}
+  @PostMapping(value = "/transaction")
+  public Mono<String> addTransaction(@RequestBody TransactionRequest transaction) {
+    return bankRepo.requestTransaction(transaction.targetAccount, transaction.amount);
+  }
 
   @PostMapping(value = "/register")
   public Mono<SecurityContext> regsterAccount() {

@@ -7,7 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.r2dbc.core.DatabaseClient;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
-import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 
 @Repository
 public class BankRepository {
@@ -19,7 +19,7 @@ public class BankRepository {
   }
 
   @Transactional
-  public Flux<Row> addTransaction(UUID source, UUID target, Double amount) {
+  public Mono<Row> addTransaction(UUID source, UUID target, Double amount) {
     UUID transactionId = UUID.randomUUID();
     return this.client
         .sql(
@@ -29,6 +29,7 @@ public class BankRepository {
         .bind("amount", amount)
         .bind("transactionId", transactionId)
         .map(row -> row)
-        .all();
+        .all()
+        .next();
   }
 }
