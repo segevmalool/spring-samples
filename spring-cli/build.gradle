@@ -1,0 +1,59 @@
+import com.amazonaws.services.ecr.AmazonECRClientBuilder
+import com.amazonaws.services.ecr.model.GetAuthorizationTokenRequest
+import java.util.Base64
+
+buildscript {
+	dependencies {
+		classpath platform('com.amazonaws:aws-java-sdk-bom:1.11.1000')
+		classpath 'com.amazonaws:aws-java-sdk-ecr:1.12.131'
+	}
+}
+
+plugins {
+	id 'org.springframework.boot' version '2.6.1'
+	id 'io.spring.dependency-management' version '1.0.11.RELEASE'
+	id 'java'
+}
+
+group = 'com.example'
+version = '0.0.1-SNAPSHOT'
+sourceCompatibility = '11'
+
+repositories {
+	mavenCentral()
+}
+
+dependencies {
+	implementation 'org.springframework.boot:spring-boot-starter'
+	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+
+	implementation 'io.projectreactor:reactor-core'
+
+}
+
+test {
+	useJUnitPlatform()
+}
+
+bootRun {
+	environment = [
+	        myVar: "big bird"
+	]
+}
+
+bootBuildImage {
+	imageName = "266455520073.dkr.ecr.us-east-1.amazonaws.com/practice/abcde"
+	publish = true
+
+	docker {
+		publishRegistry {
+			(username, password) = new String(Base64.getDecoder().decode(
+					AmazonECRClientBuilder.defaultClient().getAuthorizationToken(
+							new GetAuthorizationTokenRequest()
+					).getAuthorizationData().get(0).getAuthorizationToken()
+			)).split(':')
+			url = "266455520073.dkr.ecr.us-east-1.amazonaws.com/practice"
+			email = "segbaus@gmail.com"
+		}
+	}
+}
